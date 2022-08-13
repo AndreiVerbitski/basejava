@@ -8,11 +8,7 @@ public class ArrayStorage {
     int size;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                storage[i] = null;
-            }
-        }
+        Arrays.fill(storage, null);
         size = 0;
     }
 
