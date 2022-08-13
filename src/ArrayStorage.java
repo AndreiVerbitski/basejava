@@ -5,6 +5,7 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size;
 
     void clear() {
         for (int i = 0; i < storage.length; i++) {
@@ -12,12 +13,14 @@ public class ArrayStorage {
                 storage[i] = null;
             }
         }
+        size = 0;
     }
 
     void save(Resume r) {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                size++;
                 break;
             }
         }
@@ -36,10 +39,20 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                break;
-            } else if (uuid.equals(storage[i].uuid)) {
+            if ((uuid).equals(storage[i].uuid)) {
                 storage[i] = null;
+                size--;
+                break;
+            }
+        }
+
+        for (int i = 0; i < storage.length; i++) {
+            int temp = 0;
+            for (int j = 0; j < i; j++) {
+                if (storage[j] == null && storage[j + 1] != null) {
+                    storage[j] = storage[j + 1];
+                    storage[j + 1] = null;
+                }
             }
         }
     }
@@ -48,40 +61,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int count = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                count++;
-            }
-        }
-
-        Resume[] destStorage = new Resume[count];
-        count = 0;
-        int len = 0;
-
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                for (int j = i; j < storage.length; j++) {
-                    if (storage[j] == null) {
-                        break;
-                    }
-                    len++;
-                }
-                System.arraycopy(storage, i, destStorage, count, len);
-                count++;
-                len = 0;
-            }
-        }
-        return destStorage;
+        return Arrays.copyOf(storage, storage.length);
     }
 
     int size() {
-        int countSize = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                countSize++;
-            }
-        }
-        return countSize;
+        return size;
     }
 }
