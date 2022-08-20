@@ -8,7 +8,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    final protected static int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void clear() {
@@ -17,50 +18,53 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        try {
-            storage[includeResume(r.getUuid())] = r;
-        } catch (NumberFormatException e) {
-            System.out.println("Такого резюме " + r.getUuid() + " нет в нашем списке.");
+        int index = getSearchKey(r.getUuid());
+
+        if (storage[index] == r) {
+            storage[index] = r;
+        } else {
+            System.out.println("Данного резюме " + r.getUuid() + " нет в списке.");
         }
     }
 
     public void save(Resume r) {
-        if (size <= storage.length) {
-            try {
-                boolean includeResume = false;
-                for (int i = 0; i < size; i++) {
-                    if (storage[i] == r) {
-                        includeResume = true;
-                        break;
-                    }
-                }
-                if (!includeResume) {
-                    storage[size] = r;
-                    size++;
-                } else throw new IllegalStateException("Резюме " + r.getUuid() + " уже есть в списке.");
-            } catch (IllegalStateException e) {
-                System.out.println("Резюме " + r.getUuid() + " уже есть в списке.");
-            }
-        } else System.out.println("Массив переполнен");
+        int index = getSearchKey(r.getUuid());
+
+        if (size >= storage.length) {
+            System.out.println("Список переполнен.");
+        } else if (index >= 0 && storage[index] == r) {
+            throw new ArrayIndexOutOfBoundsException("Данное резюме " + r.getUuid() + " уже есть в списке.");
+        } else {
+            storage[size] = r;
+            size++;
+        }
     }
 
     public Resume get(String uuid) {
+        int index = getSearchKey(uuid);
+
         try {
-            return storage[includeResume(uuid)];
-        } catch (NumberFormatException e) {
-            System.out.println("Такого резюме " + uuid + " нет в нашем списке.");
+            if (storage[index].getUuid().equals(uuid)) {
+                return storage[index];
+            } else {
+                throw new ArrayIndexOutOfBoundsException("Данное резюме " + uuid + " уже есть в списке.");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Данного резюме " + uuid + " нет в списке.");
         }
         return null;
     }
 
     public void delete(String uuid) {
-        try {
-            storage[includeResume(uuid)] = storage[size - 1];
-            size--;
-        } catch (NumberFormatException e) {
-            System.out.println("Такого резюме " + uuid + " нет в нашем списке.");
-        }
+        int index = getSearchKey(uuid);
 
+        if (storage[index].equals(uuid)) {
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+        } else {
+            System.out.println("Данного резюме " + uuid + " нет в списке.");
+        }
     }
 
     /**
@@ -74,12 +78,12 @@ public class ArrayStorage {
         return size;
     }
 
-    public int includeResume(String uuid) {
+    public int getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
-            } else throw new NumberFormatException("Такого резюме " + uuid + " нет в нашем списке.");
+            }
         }
-        return 0;
+        return -1;
     }
 }
