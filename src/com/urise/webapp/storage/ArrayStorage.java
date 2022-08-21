@@ -46,7 +46,7 @@ public class ArrayStorage {
         if (index >= 0) {
             return storage[index];
         } else {
-            System.out.println("Данное резюме " + uuid + " уже есть в списке.");
+            System.out.println("Данного резюме " + uuid + " нет в списке.");
         }
         return null;
     }
