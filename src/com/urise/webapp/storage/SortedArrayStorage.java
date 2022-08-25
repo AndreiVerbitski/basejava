@@ -21,4 +21,14 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         searchKey.setUuid(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
+
+    @Override
+    protected Resume insertResume(Resume r) {
+        return null;
+    }
+
+    @Override
+    protected String deleteResume(String uuid) {
+        return null;
+    }
 }
