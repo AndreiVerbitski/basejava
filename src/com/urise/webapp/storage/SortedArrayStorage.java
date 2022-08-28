@@ -23,12 +23,14 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected Resume insertResume(Resume r) {
-        return null;
+    protected void insertResume(Resume r, int index) {
+        int insertionKey = -index - 1;
+        System.arraycopy(storage, insertionKey, storage, insertionKey + 1, size - insertionKey);
+        storage[insertionKey] = r;
     }
 
     @Override
-    protected String deleteResume(String uuid) {
-        return null;
+    protected void deleteResume(String uuid, int index) {
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
     }
 }
