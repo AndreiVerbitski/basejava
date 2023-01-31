@@ -41,19 +41,21 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return storage.contains(searchKey);
+        return searchKey != null;
     }
 
     @Override
-    public void clear() {}
+    public void clear() {
+        storage.clear();
+    }
 
     @Override
     public Resume[] getAll() {
-        return new Resume[0];
+        return storage.toArray(new Resume[storage.size()]);
     }
 
     @Override
     public int size() {
-        return 0;
+        return storage.size();
     }
 }
