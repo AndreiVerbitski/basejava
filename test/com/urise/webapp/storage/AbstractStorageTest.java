@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AbstractStorageTest {
+public abstract class AbstractStorageTest {
 
     private final Storage storage;
 
